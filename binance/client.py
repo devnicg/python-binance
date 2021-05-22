@@ -34,6 +34,7 @@ class BaseClient:
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     MARGIN_API_VERSION = 'v1'
+    SAVING_API_VERSION = 'v1'
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = "v2"
     OPTIONS_API_VERSION = 'v1'
@@ -141,6 +142,7 @@ class BaseClient:
         self.tld = tld
         self.API_URL = self.API_URL.format(tld)
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
+        self.SAVINGS_API_URL = self.MARGIN_API_URL.format(tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
         self.FUTURES_URL = self.FUTURES_URL.format(tld)
         self.FUTURES_DATA_URL = self.FUTURES_DATA_URL.format(tld)
@@ -179,6 +181,9 @@ class BaseClient:
 
     def _create_margin_api_uri(self, path: str, version: str = MARGIN_API_VERSION) -> str:
         return self.MARGIN_API_URL + '/' + version + '/' + path
+
+    def _create_saving_api_uri(self, path: str, version: str = SAVING_API_VERSION) -> str:
+        return self.SAVINGS_API_URL + '/' + version + '/' + path
 
     def _create_website_uri(self, path: str) -> str:
         return self.WEBSITE_URL + '/' + path
@@ -354,6 +359,11 @@ class Client(BaseClient):
 
     def _request_margin_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_margin_api_uri(path)
+
+        return self._request(method, uri, signed, **kwargs)
+
+    def _request_saving_api(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_saving_api_uri(path)
 
         return self._request(method, uri, signed, **kwargs)
 
@@ -5081,6 +5091,18 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'sub-account/universalTransfer', True, data=params)
+
+    # Savings API
+
+    def get_flexible_products(self, **params):
+        """Get flexible products list
+        """
+        return self._request_saving_api('get', 'lending/daily/product/list', True, data=params)
+
+    def get_flexible_position(self, **params):
+        """Get flexible product position
+        """
+        return self._request_saving_api('get', 'lending/daily/token/position', True, data=params)
 
     # Futures API
 

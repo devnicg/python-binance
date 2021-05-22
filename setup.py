@@ -26,8 +26,8 @@ setup(
     description='Binance REST API python implementation',
     long_description=long_description,
     long_description_content_type="text/x-rst",
-    url='https://github.com/sammchardy/python-binance',
-    author='Sam McHardy',
+    url='https://github.com/devnicg/python-binance',
+    author='Sam McHardy, forked by Nicola Goderis',
     license='MIT',
     author_email='',
     install_requires=[
